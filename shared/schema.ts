@@ -52,6 +52,7 @@ export const insertMenuItemSchema = createInsertSchema(menuItems).omit({
 
 export const insertOrderSessionSchema = createInsertSchema(orderSessions).omit({
   id: true,
+  sessionLink: true,
   createdAt: true,
   finalizedAt: true,
 });
