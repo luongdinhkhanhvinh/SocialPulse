@@ -23,6 +23,8 @@ export default function AdminDashboard() {
   const [sessionName, setSessionName] = useState("");
   const [restaurant, setRestaurant] = useState("");
   const [copiedSessionId, setCopiedSessionId] = useState<number | null>(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const { toast } = useToast();
 
   const { data: sessions = [], isLoading: sessionsLoading } = useQuery<OrderSession[]>({
@@ -31,6 +33,20 @@ export default function AdminDashboard() {
 
   const { data: menuItems = [], isLoading: menuItemsLoading } = useQuery<MenuItem[]>({
     queryKey: ["/api/menu-items"],
+  });
+
+  // Query for orders by date range
+  const { data: ordersData = [], isLoading: ordersLoading } = useQuery({
+    queryKey: ["/api/orders/date-range", startDate, endDate],
+    queryFn: async () => {
+      if (!startDate || !endDate) return [];
+      const response = await fetch(`/api/orders/date-range?startDate=${startDate}&endDate=${endDate}`, {
+        credentials: "include",
+      });
+      if (!response.ok) return [];
+      return response.json();
+    },
+    enabled: !!startDate && !!endDate,
   });
 
   const createSessionMutation = useMutation({
@@ -78,6 +94,27 @@ export default function AdminDashboard() {
     },
   });
 
+  const updatePaymentMutation = useMutation({
+    mutationFn: async ({ orderId, isPaid }: { orderId: number; isPaid: boolean }) => {
+      const response = await apiRequest("PATCH", `/api/orders/${orderId}/payment`, { isPaid });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/orders/date-range", startDate, endDate] });
+      toast({
+        title: "Cập nhật thành công",
+        description: "Trạng thái thanh toán đã được cập nhật.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Lỗi",
+        description: "Không thể cập nhật trạng thái thanh toán.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const copySessionLink = async (sessionLink: string, sessionId: number) => {
     const url = `${window.location.origin}/order/${sessionLink}`;
     try {
@@ -100,6 +137,34 @@ export default function AdminDashboard() {
   const activeSessions = sessions.filter(session => session.isActive);
   const totalSessions = sessions.length;
   const totalMenuItems = menuItems.length;
+
+  // Set default date range (current week)
+  const getCurrentWeek = () => {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    const endOfWeek = new Date(today);
+    endOfWeek.setDate(today.getDate() + (6 - today.getDay()));
+    
+    return {
+      start: startOfWeek.toISOString().split('T')[0],
+      end: endOfWeek.toISOString().split('T')[0]
+    };
+  };
+
+  // Initialize with current week if dates are empty
+  if (!startDate && !endDate) {
+    const { start, end } = getCurrentWeek();
+    setStartDate(start);
+    setEndDate(end);
+  }
+
+  // Calculate order statistics
+  const orderStats = {
+    totalOrders: ordersData.length,
+    paidOrders: ordersData.filter((order: any) => order.isPaid).length,
+    totalAmount: ordersData.reduce((sum: number, order: any) => sum + parseFloat(order.totalPrice || 0), 0)
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -352,16 +417,27 @@ export default function AdminDashboard() {
                   <div className="flex items-center space-x-2">
                     <Input
                       type="date"
-                      placeholder="Từ ngày"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
                       className="w-40"
                     />
                     <Input
                       type="date"
-                      placeholder="Đến ngày"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
                       className="w-40"
                     />
-                    <Button variant="outline" size="sm">
-                      Tìm Kiếm
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        const { start, end } = getCurrentWeek();
+                        setStartDate(start);
+                        setEndDate(end);
+                      }}
+                    >
+                      <Calendar className="mr-1 h-4 w-4" />
+                      Tuần Này
                     </Button>
                   </div>
                 </div>
@@ -381,48 +457,53 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b hover:bg-gray-50">
-                        <td className="p-3">Nguyễn Văn A</td>
-                        <td className="p-3">Phở Bò Tái</td>
-                        <td className="p-3">2</td>
-                        <td className="p-3">45.000₫</td>
-                        <td className="p-3 font-semibold">90.000₫</td>
-                        <td className="p-3">26/05/2025</td>
-                        <td className="p-3">
-                          <label className="flex items-center">
-                            <input type="checkbox" className="mr-2" />
-                            <span className="text-sm">Đã thanh toán</span>
-                          </label>
-                        </td>
-                      </tr>
-                      <tr className="border-b hover:bg-gray-50">
-                        <td className="p-3">Trần Thị B</td>
-                        <td className="p-3">Gỏi Cuốn</td>
-                        <td className="p-3">3</td>
-                        <td className="p-3">25.000₫</td>
-                        <td className="p-3 font-semibold">75.000₫</td>
-                        <td className="p-3">26/05/2025</td>
-                        <td className="p-3">
-                          <label className="flex items-center">
-                            <input type="checkbox" defaultChecked className="mr-2" />
-                            <span className="text-sm">Đã thanh toán</span>
-                          </label>
-                        </td>
-                      </tr>
-                      <tr className="border-b hover:bg-gray-50">
-                        <td className="p-3">Lê Văn C</td>
-                        <td className="p-3">Cà Phê Đá</td>
-                        <td className="p-3">1</td>
-                        <td className="p-3">15.000₫</td>
-                        <td className="p-3 font-semibold">15.000₫</td>
-                        <td className="p-3">25/05/2025</td>
-                        <td className="p-3">
-                          <label className="flex items-center">
-                            <input type="checkbox" className="mr-2" />
-                            <span className="text-sm">Đã thanh toán</span>
-                          </label>
-                        </td>
-                      </tr>
+                      {ordersLoading ? (
+                        Array.from({ length: 5 }).map((_, i) => (
+                          <tr key={i} className="border-b animate-pulse">
+                            <td className="p-3"><div className="h-4 bg-gray-200 rounded w-24"></div></td>
+                            <td className="p-3"><div className="h-4 bg-gray-200 rounded w-32"></div></td>
+                            <td className="p-3"><div className="h-4 bg-gray-200 rounded w-8"></div></td>
+                            <td className="p-3"><div className="h-4 bg-gray-200 rounded w-16"></div></td>
+                            <td className="p-3"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
+                            <td className="p-3"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
+                            <td className="p-3"><div className="h-4 bg-gray-200 rounded w-20"></div></td>
+                          </tr>
+                        ))
+                      ) : ordersData.length === 0 ? (
+                        <tr>
+                          <td colSpan={7} className="p-8 text-center text-gray-500">
+                            Không có đơn hàng nào trong khoảng thời gian này
+                          </td>
+                        </tr>
+                      ) : (
+                        ordersData.map((order: any) => {
+                          const menuItem = menuItems.find(item => item.id === order.menuItemId);
+                          return (
+                            <tr key={order.id} className="border-b hover:bg-gray-50">
+                              <td className="p-3">{order.customerName}</td>
+                              <td className="p-3">{menuItem?.name || "Món không xác định"}</td>
+                              <td className="p-3">{order.quantity}</td>
+                              <td className="p-3">{formatCurrency(order.unitPrice)}</td>
+                              <td className="p-3 font-semibold">{formatCurrency(order.totalPrice)}</td>
+                              <td className="p-3">{new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
+                              <td className="p-3">
+                                <label className="flex items-center">
+                                  <input 
+                                    type="checkbox" 
+                                    checked={order.isPaid || false}
+                                    onChange={(e) => updatePaymentMutation.mutate({
+                                      orderId: order.id,
+                                      isPaid: e.target.checked
+                                    })}
+                                    className="mr-2" 
+                                  />
+                                  <span className="text-sm">Đã thanh toán</span>
+                                </label>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -430,15 +511,15 @@ export default function AdminDashboard() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                     <div>
                       <p className="text-sm text-gray-600">Tổng Đơn Hàng</p>
-                      <p className="text-2xl font-bold text-gray-900">8</p>
+                      <p className="text-2xl font-bold text-gray-900">{orderStats.totalOrders}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-600">Đã Thanh Toán</p>
-                      <p className="text-2xl font-bold text-green-600">3</p>
+                      <p className="text-2xl font-bold text-green-600">{orderStats.paidOrders}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-600">Tổng Tiền</p>
-                      <p className="text-2xl font-bold text-primary">450.000₫</p>
+                      <p className="text-2xl font-bold text-primary">{formatCurrency(orderStats.totalAmount.toFixed(2))}</p>
                     </div>
                   </div>
                 </div>
