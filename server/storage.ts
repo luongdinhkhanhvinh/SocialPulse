@@ -40,6 +40,8 @@ export interface IStorage {
   getOrder(id: number): Promise<Order | undefined>;
   createOrder(order: InsertOrder): Promise<Order>;
   deleteOrder(id: number): Promise<boolean>;
+  updateOrderPaymentStatus(id: number, isPaid: boolean): Promise<Order | undefined>;
+  getOrdersByDateRange(startDate: Date, endDate: Date): Promise<Order[]>;
 
   // Analytics
   getOrderSessionStats(sessionId: number): Promise<{
@@ -238,6 +240,7 @@ export class MemStorage implements IStorage {
     const newOrder: Order = { 
       ...order, 
       id, 
+      isPaid: order.isPaid || false,
       createdAt: new Date() 
     };
     this.orders.set(id, newOrder);
@@ -246,6 +249,22 @@ export class MemStorage implements IStorage {
 
   async deleteOrder(id: number): Promise<boolean> {
     return this.orders.delete(id);
+  }
+
+  async updateOrderPaymentStatus(id: number, isPaid: boolean): Promise<Order | undefined> {
+    const existing = this.orders.get(id);
+    if (!existing) return undefined;
+    
+    const updated: Order = { ...existing, isPaid };
+    this.orders.set(id, updated);
+    return updated;
+  }
+
+  async getOrdersByDateRange(startDate: Date, endDate: Date): Promise<Order[]> {
+    return Array.from(this.orders.values()).filter(order => {
+      const orderDate = new Date(order.createdAt);
+      return orderDate >= startDate && orderDate <= endDate;
+    });
   }
 
   // Analytics

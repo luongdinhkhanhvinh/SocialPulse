@@ -37,6 +37,7 @@ export const orders = pgTable("orders", {
   quantity: integer("quantity").notNull(),
   unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull(),
   totalPrice: decimal("total_price", { precision: 10, scale: 2 }).notNull(),
+  isPaid: boolean("is_paid").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Plus, Users, DollarSign, Clock, TrendingUp, MoreVertical, ExternalLink, Copy, Check } from "lucide-react";
+import { Plus, Users, DollarSign, Clock, TrendingUp, MoreVertical, ExternalLink, Copy, Check, Search, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -229,8 +229,9 @@ export default function AdminDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="sessions" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="sessions">Phiên Đặt Cơm</TabsTrigger>
+            <TabsTrigger value="orders">Danh Sách Đặt Cơm</TabsTrigger>
             <TabsTrigger value="menu">Quản Lý Thực Đơn</TabsTrigger>
           </TabsList>
 
@@ -339,6 +340,108 @@ export default function AdminDashboard() {
                     ))}
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="orders" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Danh Sách Đặt Cơm</CardTitle>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      type="date"
+                      placeholder="Từ ngày"
+                      className="w-40"
+                    />
+                    <Input
+                      type="date"
+                      placeholder="Đến ngày"
+                      className="w-40"
+                    />
+                    <Button variant="outline" size="sm">
+                      Tìm Kiếm
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left p-3 font-medium text-gray-900">Khách Hàng</th>
+                        <th className="text-left p-3 font-medium text-gray-900">Món Ăn</th>
+                        <th className="text-left p-3 font-medium text-gray-900">Số Lượng</th>
+                        <th className="text-left p-3 font-medium text-gray-900">Giá</th>
+                        <th className="text-left p-3 font-medium text-gray-900">Tổng Tiền</th>
+                        <th className="text-left p-3 font-medium text-gray-900">Ngày Đặt</th>
+                        <th className="text-left p-3 font-medium text-gray-900">Thanh Toán</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b hover:bg-gray-50">
+                        <td className="p-3">Nguyễn Văn A</td>
+                        <td className="p-3">Phở Bò Tái</td>
+                        <td className="p-3">2</td>
+                        <td className="p-3">45.000₫</td>
+                        <td className="p-3 font-semibold">90.000₫</td>
+                        <td className="p-3">26/05/2025</td>
+                        <td className="p-3">
+                          <label className="flex items-center">
+                            <input type="checkbox" className="mr-2" />
+                            <span className="text-sm">Đã thanh toán</span>
+                          </label>
+                        </td>
+                      </tr>
+                      <tr className="border-b hover:bg-gray-50">
+                        <td className="p-3">Trần Thị B</td>
+                        <td className="p-3">Gỏi Cuốn</td>
+                        <td className="p-3">3</td>
+                        <td className="p-3">25.000₫</td>
+                        <td className="p-3 font-semibold">75.000₫</td>
+                        <td className="p-3">26/05/2025</td>
+                        <td className="p-3">
+                          <label className="flex items-center">
+                            <input type="checkbox" defaultChecked className="mr-2" />
+                            <span className="text-sm">Đã thanh toán</span>
+                          </label>
+                        </td>
+                      </tr>
+                      <tr className="border-b hover:bg-gray-50">
+                        <td className="p-3">Lê Văn C</td>
+                        <td className="p-3">Cà Phê Đá</td>
+                        <td className="p-3">1</td>
+                        <td className="p-3">15.000₫</td>
+                        <td className="p-3 font-semibold">15.000₫</td>
+                        <td className="p-3">25/05/2025</td>
+                        <td className="p-3">
+                          <label className="flex items-center">
+                            <input type="checkbox" className="mr-2" />
+                            <span className="text-sm">Đã thanh toán</span>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div>
+                      <p className="text-sm text-gray-600">Tổng Đơn Hàng</p>
+                      <p className="text-2xl font-bold text-gray-900">8</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Đã Thanh Toán</p>
+                      <p className="text-2xl font-bold text-green-600">3</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Tổng Tiền</p>
+                      <p className="text-2xl font-bold text-primary">450.000₫</p>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

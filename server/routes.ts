@@ -181,6 +181,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Payment status update
+  app.patch("/api/orders/:id/payment", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { isPaid } = req.body;
+      const order = await storage.updateOrderPaymentStatus(id, isPaid);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      res.json(order);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update payment status" });
+    }
+  });
+
+  // Orders by date range
+  app.get("/api/orders/date-range", async (req, res) => {
+    try {
+      const { startDate, endDate } = req.query;
+      if (!startDate || !endDate) {
+        return res.status(400).json({ message: "Start date and end date are required" });
+      }
+      const orders = await storage.getOrdersByDateRange(
+        new Date(startDate as string),
+        new Date(endDate as string)
+      );
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch orders by date range" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
