@@ -196,7 +196,7 @@ export default function AdminDashboard() {
                 <Badge variant="secondary" className="text-green-600">+5%</Badge>
               </div>
               <h3 className="text-2xl font-bold text-gray-900">{totalSessions}</h3>
-              <p className="text-gray-600 text-sm">Total Sessions</p>
+              <p className="text-gray-600 text-sm">Tổng Số Phiên</p>
             </CardContent>
           </Card>
 
@@ -209,7 +209,7 @@ export default function AdminDashboard() {
                 <Badge variant="secondary" className="text-green-600">+18%</Badge>
               </div>
               <h3 className="text-2xl font-bold text-gray-900">{totalMenuItems}</h3>
-              <p className="text-gray-600 text-sm">Menu Items</p>
+              <p className="text-gray-600 text-sm">Món Ăn</p>
             </CardContent>
           </Card>
 
@@ -222,7 +222,7 @@ export default function AdminDashboard() {
                 <Badge variant="secondary" className="text-yellow-600">2.5min</Badge>
               </div>
               <h3 className="text-2xl font-bold text-gray-900">3.2</h3>
-              <p className="text-gray-600 text-sm">Avg Order Time (min)</p>
+              <p className="text-gray-600 text-sm">Thời Gian Đặt TB (phút)</p>
             </CardContent>
           </Card>
         </div>
@@ -230,17 +230,17 @@ export default function AdminDashboard() {
         {/* Main Content */}
         <Tabs defaultValue="sessions" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="sessions">Order Sessions</TabsTrigger>
-            <TabsTrigger value="menu">Menu Management</TabsTrigger>
+            <TabsTrigger value="sessions">Phiên Đặt Cơm</TabsTrigger>
+            <TabsTrigger value="menu">Quản Lý Thực Đơn</TabsTrigger>
           </TabsList>
 
           <TabsContent value="sessions" className="space-y-6">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Active Order Sessions</CardTitle>
+                  <CardTitle>Phiên Đặt Cơm Đang Hoạt Động</CardTitle>
                   <Button variant="outline" size="sm">
-                    View All
+                    Xem Tất Cả
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -257,13 +257,13 @@ export default function AdminDashboard() {
                   </div>
                 ) : activeSessions.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">No active sessions</p>
+                    <p className="text-gray-500">Chưa có phiên nào đang hoạt động</p>
                     <Button 
                       onClick={() => setIsCreateSessionOpen(true)} 
                       className="mt-4"
                       variant="outline"
                     >
-                      Create Your First Session
+                      Tạo Phiên Đầu Tiên
                     </Button>
                   </div>
                 ) : (
