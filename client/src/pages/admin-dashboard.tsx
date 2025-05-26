@@ -110,12 +110,12 @@ export default function AdminDashboard() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <div className="text-2xl">🍽️</div>
-                <span className="text-xl font-bold text-gray-900">TeamEats</span>
+                <span className="text-xl font-bold text-gray-900">Đặt Cơm Nhóm</span>
               </div>
               <div className="hidden md:flex items-center space-x-1 ml-6">
                 <Button variant="ghost" size="sm" className="text-primary bg-orange-50">
                   <TrendingUp className="mr-2 h-4 w-4" />
-                  Dashboard
+                  Bảng điều khiển
                 </Button>
               </div>
             </div>
@@ -124,30 +124,30 @@ export default function AdminDashboard() {
                 <DialogTrigger asChild>
                   <Button className="bg-primary hover:bg-orange-600">
                     <Plus className="mr-2 h-4 w-4" />
-                    New Session
+                    Phiên Mới
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Create Order Session</DialogTitle>
+                    <DialogTitle>Tạo Phiên Đặt Cơm</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="sessionName">Session Name</Label>
+                      <Label htmlFor="sessionName">Tên Phiên</Label>
                       <Input
                         id="sessionName"
                         value={sessionName}
                         onChange={(e) => setSessionName(e.target.value)}
-                        placeholder="e.g., Monday Team Lunch"
+                        placeholder="VD: Cơm Trưa Nhóm Thứ Hai"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="restaurant">Restaurant</Label>
+                      <Label htmlFor="restaurant">Nhà Hàng</Label>
                       <Input
                         id="restaurant"
                         value={restaurant}
                         onChange={(e) => setRestaurant(e.target.value)}
-                        placeholder="e.g., Pho Saigon Restaurant"
+                        placeholder="VD: Quán Phở Sài Gòn"
                       />
                     </div>
                     <Button
@@ -155,7 +155,7 @@ export default function AdminDashboard() {
                       disabled={!sessionName || !restaurant || createSessionMutation.isPending}
                       className="w-full"
                     >
-                      {createSessionMutation.isPending ? "Creating..." : "Create Session"}
+                      {createSessionMutation.isPending ? "Đang tạo..." : "Tạo Phiên"}
                     </Button>
                   </div>
                 </DialogContent>
@@ -168,8 +168,8 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Dashboard Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Overview</h1>
-          <p className="text-gray-600">Manage your team lunch orders and track performance</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Tổng Quan Bảng Điều Khiển</h1>
+          <p className="text-gray-600">Quản lý đặt cơm nhóm và theo dõi hiệu suất</p>
         </div>
 
         {/* Stats Cards */}
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
                 <Badge variant="secondary" className="text-green-600">Active</Badge>
               </div>
               <h3 className="text-2xl font-bold text-gray-900">{activeSessions.length}</h3>
-              <p className="text-gray-600 text-sm">Active Sessions</p>
+              <p className="text-gray-600 text-sm">Phiên Đang Hoạt Động</p>
             </CardContent>
           </Card>
 
