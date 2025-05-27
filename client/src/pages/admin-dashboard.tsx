@@ -531,17 +531,17 @@ export default function AdminDashboard() {
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle>Menu Management</CardTitle>
+                  <CardTitle>Quản lý thực đơn</CardTitle>
                   <Dialog open={isCreateMenuItemOpen} onOpenChange={setIsCreateMenuItemOpen}>
                     <DialogTrigger asChild>
                       <Button className="bg-primary hover:bg-orange-600">
                         <Plus className="mr-2 h-4 w-4" />
-                        Add Menu Item
+                        Thêm mục menu
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl">
                       <DialogHeader>
-                        <DialogTitle>Add Menu Item</DialogTitle>
+                        <DialogTitle>Thêm mục menu</DialogTitle>
                       </DialogHeader>
                       <MenuItemForm 
                         onSuccess={() => {
@@ -566,13 +566,13 @@ export default function AdminDashboard() {
                   </div>
                 ) : menuItems.length === 0 ? (
                   <div className="text-center py-8">
-                    <p className="text-gray-500">No menu items yet</p>
+                    <p className="text-gray-500">Chưa có mục menu nào</p>
                     <Button 
                       onClick={() => setIsCreateMenuItemOpen(true)} 
                       className="mt-4"
                       variant="outline"
                     >
-                      Add Your First Menu Item
+                      Thêm mục menu đầu tiên của bạn
                     </Button>
                   </div>
                 ) : (
