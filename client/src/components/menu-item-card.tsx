@@ -77,14 +77,14 @@ export default function MenuItemCard({ item, onUpdate }: MenuItemCardProps) {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
                     <Edit className="mr-2 h-4 w-4" />
-                    Edit
+                    Sửa
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setIsDeleteOpen(true)}
                     className="text-red-600"
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
+                    Xoá
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -102,7 +102,7 @@ export default function MenuItemCard({ item, onUpdate }: MenuItemCardProps) {
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit Menu Item</DialogTitle>
+            <DialogTitle>Sửa món ăn</DialogTitle>
           </DialogHeader>
           <MenuItemForm 
             initialData={{
@@ -127,9 +127,9 @@ export default function MenuItemCard({ item, onUpdate }: MenuItemCardProps) {
       <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Menu Item</AlertDialogTitle>
+            <AlertDialogTitle>Xoá món ăn</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{item.name}"? This action cannot be undone.
+              Bạn có chắc chắn muốn xóa "{item.name}" không? Hành động này không thể hoàn tác
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -139,7 +139,7 @@ export default function MenuItemCard({ item, onUpdate }: MenuItemCardProps) {
               disabled={deleteMutation.isPending}
               className="bg-red-600 hover:bg-red-700"
             >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending ? "Đang xoá..." : "Xoá"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

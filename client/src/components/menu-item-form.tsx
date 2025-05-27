@@ -27,12 +27,12 @@ interface MenuItemFormProps {
 }
 
 const categories = [
-  "Appetizer",
-  "Main Course", 
-  "Beverage",
-  "Dessert",
-  "Side Dish",
-  "Soup",
+  "Món khai vị",
+  "Món chính",
+  "Đồ uống",
+  "Món tráng miệng",
+  "Món ăn kèm",
+  "Súp",
   "Salad"
 ];
 
@@ -86,7 +86,7 @@ export default function MenuItemForm({ onSuccess, initialData, isEditing = false
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Item Name</FormLabel>
+              <FormLabel>Tên món</FormLabel>
               <FormControl>
                 <Input placeholder="e.g., Pho Bo Tai" {...field} />
               </FormControl>
@@ -100,10 +100,10 @@ export default function MenuItemForm({ onSuccess, initialData, isEditing = false
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel>Mô tả</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Describe the dish..."
+                  placeholder="Mô tả món ăn..."
                   className="min-h-[80px]"
                   {...field} 
                 />
@@ -119,7 +119,7 @@ export default function MenuItemForm({ onSuccess, initialData, isEditing = false
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price ($)</FormLabel>
+                <FormLabel>Gía (VND)</FormLabel>
                 <FormControl>
                   <Input 
                     type="number"
@@ -139,11 +139,11 @@ export default function MenuItemForm({ onSuccess, initialData, isEditing = false
             name="category"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Category</FormLabel>
+                <FormLabel>Danh mục</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
+                      <SelectValue placeholder="Chọn danh mục" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -165,7 +165,7 @@ export default function MenuItemForm({ onSuccess, initialData, isEditing = false
           name="imageUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image URL (optional)</FormLabel>
+              <FormLabel>URL Hình Ảnh (không bắt buộc)</FormLabel>
               <FormControl>
                 <Input 
                   type="url"
